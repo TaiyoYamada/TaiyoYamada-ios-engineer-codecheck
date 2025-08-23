@@ -27,7 +27,13 @@ class ViewController2: UIViewController {
     }
     
     private func setupRepositoryDetails() {
-        guard selectedIndex < repositories.count else { return }
+        // 配列の範囲外アクセスを防ぐより厳密なチェック
+        guard selectedIndex >= 0,
+              selectedIndex < repositories.count,
+              !repositories.isEmpty else {
+            print("無効なリポジトリインデックス: \(selectedIndex), 配列サイズ: \(repositories.count)")
+            return
+        }
         
         let repository = repositories[selectedIndex]
         
@@ -57,13 +63,31 @@ class ViewController2: UIViewController {
     private func loadOwnerImage(from repository: [String: Any]) {
         guard let owner = repository["owner"] as? [String: Any],
               let imageURLString = owner["avatar_url"] as? String,
-              let imageURL = URL(string: imageURLString) else { return }
+              let imageURL = URL(string: imageURLString) else {
+            // 画像URLが取得できない場合はデフォルト画像を設定
+            avatarImageView.image = UIImage(systemName: "person.circle")
+            return
+        }
         
         URLSession.shared.dataTask(with: imageURL) { [weak self] data, response, error in
-            guard let self = self,
-                  let data = data,
-                  let image = UIImage(data: data),
-                  error == nil else { return }
+            guard let self = self else { return }
+            
+            // エラーハンドリングを改善
+            if let error = error {
+                print("画像読み込みエラー: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.avatarImageView.image = UIImage(systemName: "person.circle")
+                }
+                return
+            }
+            
+            guard let data = data, let image = UIImage(data: data) else {
+                print("画像データの変換に失敗しました")
+                DispatchQueue.main.async {
+                    self.avatarImageView.image = UIImage(systemName: "person.circle")
+                }
+                return
+            }
             
             DispatchQueue.main.async {
                 self.avatarImageView.image = image

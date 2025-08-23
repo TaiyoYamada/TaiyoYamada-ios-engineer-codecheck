@@ -31,24 +31,57 @@ class ViewController: UITableViewController {
         
         searchTask?.cancel()
         
-        let urlString = "https://api.github.com/search/repositories?q=\(query)"
-        guard let url = URL(string: urlString) else { return }
+        // URLエンコーディングを安全に行う
+        guard let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "https://api.github.com/search/repositories?q=\(encodedQuery)") else {
+            print("無効なURL: \(query)")
+            return
+        }
         
         searchTask = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self,
-                  let data = data,
-                  error == nil else { return }
+            guard let self = self else { return }
+            
+            // エラーハンドリングを改善
+            if let error = error {
+                print("ネットワークエラー: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    // エラー時は空の配列を設定してテーブルをクリア
+                    self.repositories = []
+                    self.tableView.reloadData()
+                }
+                return
+            }
+            
+            guard let data = data else {
+                print("データが取得できませんでした")
+                DispatchQueue.main.async {
+                    self.repositories = []
+                    self.tableView.reloadData()
+                }
+                return
+            }
             
             do {
-                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let items = json["items"] as? [[String: Any]] {
-                    self.repositories = items
+                guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                      let items = json["items"] as? [[String: Any]] else {
+                    print("JSONの形式が期待されるものと異なります")
                     DispatchQueue.main.async {
+                        self.repositories = []
                         self.tableView.reloadData()
                     }
+                    return
+                }
+                
+                self.repositories = items
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
                 }
             } catch {
-                print("JSON parsing error: \(error)")
+                print("JSON解析エラー: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.repositories = []
+                    self.tableView.reloadData()
+                }
             }
         }
         searchTask?.resume()
@@ -73,6 +106,11 @@ class ViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Repository") ?? UITableViewCell(style: .value1, reuseIdentifier: "Repository")
         
+        // 配列の範囲外アクセスを防ぐ安全なチェック
+        guard indexPath.row < repositories.count else {
+            return cell
+        }
+        
         let repository = repositories[indexPath.row]
         cell.textLabel?.text = repository["full_name"] as? String
         cell.detailTextLabel?.text = repository["language"] as? String
@@ -82,6 +120,12 @@ class ViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        // 配列の範囲外アクセスを防ぐ安全なチェック
+        guard indexPath.row < repositories.count else {
+            return
+        }
+        
         selectedRepositoryIndex = indexPath.row
         performSegue(withIdentifier: "Detail", sender: self)
     }

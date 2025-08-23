@@ -10,50 +10,64 @@ import UIKit
 
 class ViewController2: UIViewController {
     
-    @IBOutlet weak var ImgView: UIImageView!
+    @IBOutlet weak var avatarImageView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var languageLabel: UILabel!
+    @IBOutlet weak var starsLabel: UILabel!
+    @IBOutlet weak var watchersLabel: UILabel!
+    @IBOutlet weak var forksLabel: UILabel!
+    @IBOutlet weak var issuesLabel: UILabel!
     
-    @IBOutlet weak var TtlLbl: UILabel!
+    var repositories: [[String: Any]] = []
+    var selectedIndex: Int = 0
     
-    @IBOutlet weak var LangLbl: UILabel!
-    
-    @IBOutlet weak var StrsLbl: UILabel!
-    @IBOutlet weak var WchsLbl: UILabel!
-    @IBOutlet weak var FrksLbl: UILabel!
-    @IBOutlet weak var IsssLbl: UILabel!
-    
-    var vc1: ViewController!
-        
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let repo = vc1.repo[vc1.idx]
-        
-        LangLbl.text = "Written in \(repo["language"] as? String ?? "")"
-        StrsLbl.text = "\(repo["stargazers_count"] as? Int ?? 0) stars"
-        WchsLbl.text = "\(repo["wachers_count"] as? Int ?? 0) watchers"
-        FrksLbl.text = "\(repo["forks_count"] as? Int ?? 0) forks"
-        IsssLbl.text = "\(repo["open_issues_count"] as? Int ?? 0) open issues"
-        getImage()
-        
+        setupRepositoryDetails()
     }
     
-    func getImage(){
+    private func setupRepositoryDetails() {
+        guard selectedIndex < repositories.count else { return }
         
-        let repo = vc1.repo[vc1.idx]
+        let repository = repositories[selectedIndex]
         
-        TtlLbl.text = repo["full_name"] as? String
+        setupLabels(with: repository)
+        loadOwnerImage(from: repository)
+    }
+    
+    private func setupLabels(with repository: [String: Any]) {
+        titleLabel.text = repository["full_name"] as? String
         
-        if let owner = repo["owner"] as? [String: Any] {
-            if let imgURL = owner["avatar_url"] as? String {
-                URLSession.shared.dataTask(with: URL(string: imgURL)!) { (data, res, err) in
-                    let img = UIImage(data: data!)!
-                    DispatchQueue.main.async {
-                        self.ImgView.image = img
-                    }
-                }.resume()
+        let language = repository["language"] as? String ?? "Unknown"
+        languageLabel.text = "Written in \(language)"
+        
+        let starCount = repository["stargazers_count"] as? Int ?? 0
+        starsLabel.text = "\(starCount) stars"
+        
+        let watcherCount = repository["watchers_count"] as? Int ?? 0
+        watchersLabel.text = "\(watcherCount) watchers"
+        
+        let forkCount = repository["forks_count"] as? Int ?? 0
+        forksLabel.text = "\(forkCount) forks"
+        
+        let issueCount = repository["open_issues_count"] as? Int ?? 0
+        issuesLabel.text = "\(issueCount) open issues"
+    }
+    
+    private func loadOwnerImage(from repository: [String: Any]) {
+        guard let owner = repository["owner"] as? [String: Any],
+              let imageURLString = owner["avatar_url"] as? String,
+              let imageURL = URL(string: imageURLString) else { return }
+        
+        URLSession.shared.dataTask(with: imageURL) { [weak self] data, response, error in
+            guard let self = self,
+                  let data = data,
+                  let image = UIImage(data: data),
+                  error == nil else { return }
+            
+            DispatchQueue.main.async {
+                self.avatarImageView.image = image
             }
-        }
-        
+        }.resume()
     }
-    
 }

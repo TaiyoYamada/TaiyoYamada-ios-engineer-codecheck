@@ -20,7 +20,7 @@ class ViewController2: UIViewController {
     
     var repositories: [Repository] = []
     var selectedIndex: Int = 0
-    private var imageLoadTask: URLSessionDataTask?
+    private let imageLoader: ImageLoaderProtocol = ImageLoader()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +29,7 @@ class ViewController2: UIViewController {
     
     deinit {
         // メモリリーク防止：進行中の画像読み込みタスクをキャンセル
-        imageLoadTask?.cancel()
+        imageLoader.cancelCurrentLoad()
     }
     
     private func setupRepositoryDetails() {
@@ -60,44 +60,8 @@ class ViewController2: UIViewController {
     }
     
     private func loadOwnerImage(from repository: Repository) {
-        guard let imageURL = URL(string: repository.owner.avatarURL) else {
-            // 画像URLが取得できない場合はデフォルト画像を設定
-            avatarImageView.image = UIImage(systemName: "person.circle")
-            return
+        imageLoader.loadImage(from: repository.owner.avatarURL) { [weak self] image in
+            self?.avatarImageView.image = image
         }
-        
-        // 既存のタスクがあればキャンセル
-        imageLoadTask?.cancel()
-        
-        imageLoadTask = URLSession.shared.dataTask(with: imageURL) { [weak self] data, response, error in
-            guard let self = self else { return }
-            
-            // キャンセルされた場合は処理を中断
-            if let error = error as NSError?, error.code == NSURLErrorCancelled {
-                return
-            }
-            
-            // エラーハンドリングを改善
-            if let error = error {
-                print("画像読み込みエラー: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    self.avatarImageView.image = UIImage(systemName: "person.circle")
-                }
-                return
-            }
-            
-            guard let data = data, let image = UIImage(data: data) else {
-                print("画像データの変換に失敗しました")
-                DispatchQueue.main.async {
-                    self.avatarImageView.image = UIImage(systemName: "person.circle")
-                }
-                return
-            }
-            
-            DispatchQueue.main.async {
-                self.avatarImageView.image = image
-            }
-        }
-        imageLoadTask?.resume()
     }
 }

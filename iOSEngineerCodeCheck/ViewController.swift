@@ -8,47 +8,13 @@
 
 import UIKit
 
-// MARK: - Data Models
-
-struct GitHubSearchResponse: Codable {
-    let items: [Repository]
-}
-
-struct Repository: Codable {
-    let fullName: String
-    let language: String?
-    let stargazersCount: Int
-    let watchersCount: Int
-    let forksCount: Int
-    let openIssuesCount: Int
-    let owner: Owner
-    
-    enum CodingKeys: String, CodingKey {
-        case fullName = "full_name"
-        case language
-        case stargazersCount = "stargazers_count"
-        case watchersCount = "watchers_count"
-        case forksCount = "forks_count"
-        case openIssuesCount = "open_issues_count"
-        case owner
-    }
-}
-
-struct Owner: Codable {
-    let avatarURL: String
-    
-    enum CodingKeys: String, CodingKey {
-        case avatarURL = "avatar_url"
-    }
-}
-
 class ViewController: UITableViewController {
     
     @IBOutlet weak var searchBar: UISearchBar!
     
     private var repositories: [Repository] = []
-    private var searchTask: URLSessionDataTask?
     private var selectedRepositoryIndex: Int = 0
+    private let apiService: GitHubAPIServiceProtocol = GitHubAPIService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +23,7 @@ class ViewController: UITableViewController {
     
     deinit {
         // メモリリーク防止：進行中のタスクをキャンセル
-        searchTask?.cancel()
+        apiService.cancelCurrentSearch()
     }
     
     private func setupSearchBar() {
@@ -66,57 +32,29 @@ class ViewController: UITableViewController {
     }
     
     private func searchRepositories(with query: String) {
-        guard !query.isEmpty else { return }
-        
-        searchTask?.cancel()
-        
-        // URLエンコーディングを安全に行う
-        guard let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-              let url = URL(string: "https://api.github.com/search/repositories?q=\(encodedQuery)") else {
-            print("無効なURL: \(query)")
-            return
-        }
-        
-        searchTask = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+        apiService.searchRepositories(query: query) { [weak self] result in
             guard let self = self else { return }
             
-            // エラーハンドリングを改善
-            if let error = error {
-                print("ネットワークエラー: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    // エラー時は空の配列を設定してテーブルをクリア
-                    self.repositories = []
-                    self.tableView.reloadData()
-                }
-                return
-            }
-            
-            guard let data = data else {
-                print("データが取得できませんでした")
-                DispatchQueue.main.async {
-                    self.repositories = []
-                    self.tableView.reloadData()
-                }
-                return
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                let searchResponse = try decoder.decode(GitHubSearchResponse.self, from: data)
-                
-                self.repositories = searchResponse.items
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            } catch {
-                print("JSON解析エラー: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    self.repositories = []
-                    self.tableView.reloadData()
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let repositories):
+                    self.updateRepositories(repositories)
+                case .failure(let error):
+                    self.handleSearchError(error)
                 }
             }
         }
-        searchTask?.resume()
+    }
+    
+    private func updateRepositories(_ repositories: [Repository]) {
+        self.repositories = repositories
+        tableView.reloadData()
+    }
+    
+    private func handleSearchError(_ error: Error) {
+        print("検索エラー: \(error.localizedDescription)")
+        repositories = []
+        tableView.reloadData()
     }
     
     // MARK: - Navigation
@@ -173,7 +111,7 @@ extension ViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchTask?.cancel()
+        apiService.cancelCurrentSearch()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

@@ -8,17 +8,56 @@
 
 import UIKit
 
+// MARK: - Data Models
+
+struct GitHubSearchResponse: Codable {
+    let items: [Repository]
+}
+
+struct Repository: Codable {
+    let fullName: String
+    let language: String?
+    let stargazersCount: Int
+    let watchersCount: Int
+    let forksCount: Int
+    let openIssuesCount: Int
+    let owner: Owner
+    
+    enum CodingKeys: String, CodingKey {
+        case fullName = "full_name"
+        case language
+        case stargazersCount = "stargazers_count"
+        case watchersCount = "watchers_count"
+        case forksCount = "forks_count"
+        case openIssuesCount = "open_issues_count"
+        case owner
+    }
+}
+
+struct Owner: Codable {
+    let avatarURL: String
+    
+    enum CodingKeys: String, CodingKey {
+        case avatarURL = "avatar_url"
+    }
+}
+
 class ViewController: UITableViewController {
     
     @IBOutlet weak var searchBar: UISearchBar!
     
-    private var repositories: [[String: Any]] = []
-    private var searchTask: URLSessionTask?
+    private var repositories: [Repository] = []
+    private var searchTask: URLSessionDataTask?
     private var selectedRepositoryIndex: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSearchBar()
+    }
+    
+    deinit {
+        // メモリリーク防止：進行中のタスクをキャンセル
+        searchTask?.cancel()
     }
     
     private func setupSearchBar() {
@@ -62,17 +101,10 @@ class ViewController: UITableViewController {
             }
             
             do {
-                guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                      let items = json["items"] as? [[String: Any]] else {
-                    print("JSONの形式が期待されるものと異なります")
-                    DispatchQueue.main.async {
-                        self.repositories = []
-                        self.tableView.reloadData()
-                    }
-                    return
-                }
+                let decoder = JSONDecoder()
+                let searchResponse = try decoder.decode(GitHubSearchResponse.self, from: data)
                 
-                self.repositories = items
+                self.repositories = searchResponse.items
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -112,8 +144,8 @@ class ViewController: UITableViewController {
         }
         
         let repository = repositories[indexPath.row]
-        cell.textLabel?.text = repository["full_name"] as? String
-        cell.detailTextLabel?.text = repository["language"] as? String
+        cell.textLabel?.text = repository.fullName
+        cell.detailTextLabel?.text = repository.language ?? "Unknown"
         
         return cell
     }

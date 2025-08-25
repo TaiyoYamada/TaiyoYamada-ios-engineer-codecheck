@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BFD945DF244DC5E80012785A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945DE244DC5E80012785A /* AppDelegate.swift */; };
-		BFD945E1244DC5E80012785A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945E0244DC5E80012785A /* SceneDelegate.swift */; };
 		BFD945E8244DC5EB0012785A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFD945E7244DC5EB0012785A /* Assets.xcassets */; };
 		BFD945EB244DC5EB0012785A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFD945E9244DC5EB0012785A /* LaunchScreen.storyboard */; };
 		BFD945F6244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945F5244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift */; };
@@ -22,6 +20,7 @@
 		E543C2C52E5B504D00F75C2F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E543C2C42E5B504D00F75C2F /* ContentView.swift */; };
 		E543C2C72E5B505E00F75C2F /* RepositoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E543C2C62E5B505E00F75C2F /* RepositoryListView.swift */; };
 		E543C2C92E5B506F00F75C2F /* RepositoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E543C2C82E5B506F00F75C2F /* RepositoryDetailView.swift */; };
+		E56C152D2E5CD02100E2FC88 /* GitHubSearchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56C152C2E5CD02100E2FC88 /* GitHubSearchApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,8 +42,6 @@
 
 /* Begin PBXFileReference section */
 		BFD945DB244DC5E80012785A /* iOSEngineerCodeCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSEngineerCodeCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BFD945DE244DC5E80012785A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BFD945E0244DC5E80012785A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		BFD945E7244DC5EB0012785A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BFD945EA244DC5EB0012785A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BFD945EC244DC5EB0012785A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -63,6 +60,7 @@
 		E543C2C42E5B504D00F75C2F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E543C2C62E5B505E00F75C2F /* RepositoryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListView.swift; sourceTree = "<group>"; };
 		E543C2C82E5B506F00F75C2F /* RepositoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailView.swift; sourceTree = "<group>"; };
+		E56C152C2E5CD02100E2FC88 /* GitHubSearchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSearchApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,12 +111,11 @@
 		BFD945DD244DC5E80012785A /* iOSEngineerCodeCheck */ = {
 			isa = PBXGroup;
 			children = (
-				BFD945DE244DC5E80012785A /* AppDelegate.swift */,
-				BFD945E0244DC5E80012785A /* SceneDelegate.swift */,
 				E543C2CA2E5B508000F75C2F /* View */,
 				E543C2CB2E5B509100F75C2F /* ViewModel */,
 				E543C2CC2E5B50A200F75C2F /* Repository */,
 				E543C2B82E5B4FC100F75C2F /* GitHubAPIService.swift */,
+				E56C152C2E5CD02100E2FC88 /* GitHubSearchApp.swift */,
 				E543C2BC2E5B500900F75C2F /* ImageLoader.swift */,
 				E543C2BA2E5B4FEE00F75C2F /* GitHubResponse.swift */,
 				BFD945E7244DC5EB0012785A /* Assets.xcassets */,
@@ -126,6 +123,24 @@
 				BFD945EC244DC5EB0012785A /* Info.plist */,
 			);
 			path = iOSEngineerCodeCheck;
+			sourceTree = "<group>";
+		};
+		BFD945F4244DC5EB0012785A /* iOSEngineerCodeCheckTests */ = {
+			isa = PBXGroup;
+			children = (
+				BFD945F5244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift */,
+				BFD945F7244DC5EB0012785A /* Info.plist */,
+			);
+			path = iOSEngineerCodeCheckTests;
+			sourceTree = "<group>";
+		};
+		BFD945FF244DC5EB0012785A /* iOSEngineerCodeCheckUITests */ = {
+			isa = PBXGroup;
+			children = (
+				BFD94600244DC5EC0012785A /* iOSEngineerCodeCheckUITests.swift */,
+				BFD94602244DC5EC0012785A /* Info.plist */,
+			);
+			path = iOSEngineerCodeCheckUITests;
 			sourceTree = "<group>";
 		};
 		E543C2CA2E5B508000F75C2F /* View */ = {
@@ -153,24 +168,6 @@
 				E543C2BE2E5B501A00F75C2F /* GitHubRepository.swift */,
 			);
 			path = Repository;
-			sourceTree = "<group>";
-		};
-		BFD945F4244DC5EB0012785A /* iOSEngineerCodeCheckTests */ = {
-			isa = PBXGroup;
-			children = (
-				BFD945F5244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift */,
-				BFD945F7244DC5EB0012785A /* Info.plist */,
-			);
-			path = iOSEngineerCodeCheckTests;
-			sourceTree = "<group>";
-		};
-		BFD945FF244DC5EB0012785A /* iOSEngineerCodeCheckUITests */ = {
-			isa = PBXGroup;
-			children = (
-				BFD94600244DC5EC0012785A /* iOSEngineerCodeCheckUITests.swift */,
-				BFD94602244DC5EC0012785A /* Info.plist */,
-			);
-			path = iOSEngineerCodeCheckUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,7 +234,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1640;
 				ORGANIZATIONNAME = "YUMEMI Inc.";
 				TargetAttributes = {
 					BFD945DA244DC5E80012785A = {
@@ -308,13 +305,12 @@
 				E543C2BD2E5B500900F75C2F /* ImageLoader.swift in Sources */,
 				E543C2BB2E5B4FEE00F75C2F /* GitHubResponse.swift in Sources */,
 				E543C2BF2E5B501A00F75C2F /* GitHubRepository.swift in Sources */,
+				E56C152D2E5CD02100E2FC88 /* GitHubSearchApp.swift in Sources */,
 				E543C2C12E5B502B00F75C2F /* RepositoryListViewModel.swift in Sources */,
 				E543C2C32E5B503C00F75C2F /* RepositoryDetailViewModel.swift in Sources */,
 				E543C2C52E5B504D00F75C2F /* ContentView.swift in Sources */,
 				E543C2C72E5B505E00F75C2F /* RepositoryListView.swift in Sources */,
 				E543C2C92E5B506F00F75C2F /* RepositoryDetailView.swift in Sources */,
-				BFD945DF244DC5E80012785A /* AppDelegate.swift in Sources */,
-				BFD945E1244DC5E80012785A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,6 +392,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = HJC5DQ3PVM;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -458,6 +455,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = HJC5DQ3PVM;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -484,7 +482,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HJC5DQ3PVM;
 				INFOPLIST_FILE = iOSEngineerCodeCheck/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -502,7 +499,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HJC5DQ3PVM;
 				INFOPLIST_FILE = iOSEngineerCodeCheck/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -518,10 +514,8 @@
 		BFD94609244DC5EC0012785A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HJC5DQ3PVM;
 				INFOPLIST_FILE = iOSEngineerCodeCheckTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -539,10 +533,8 @@
 		BFD9460A244DC5EC0012785A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HJC5DQ3PVM;
 				INFOPLIST_FILE = iOSEngineerCodeCheckTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -560,9 +552,7 @@
 		BFD9460C244DC5EC0012785A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HJC5DQ3PVM;
 				INFOPLIST_FILE = iOSEngineerCodeCheckUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -580,9 +570,7 @@
 		BFD9460D244DC5EC0012785A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HJC5DQ3PVM;
 				INFOPLIST_FILE = iOSEngineerCodeCheckUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

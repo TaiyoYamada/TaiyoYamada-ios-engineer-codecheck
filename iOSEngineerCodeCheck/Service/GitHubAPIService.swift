@@ -60,7 +60,7 @@ class GitHubAPIService: GitHubAPIServiceProtocol {
     }
 }
 
-// MARK: - Custom Errors
+// MARK: - Errors
 
 enum GitHubAPIError: LocalizedError {
     case invalidURL

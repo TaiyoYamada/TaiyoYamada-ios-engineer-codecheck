@@ -9,7 +9,7 @@
 
 import UIKit
 
-// MARK: - Image Loading Service
+// MARK: - Image Loading
 
 protocol ImageLoaderProtocol {
     func loadImage(from urlString: String, completion: @escaping (UIImage?) -> Void)

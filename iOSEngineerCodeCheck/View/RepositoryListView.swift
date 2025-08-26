@@ -6,6 +6,7 @@
 //  Copyright © 2025 YUMEMI Inc. All rights reserved.
 //
 
+
 import SwiftUI
 
 struct RepositoryListView: View {
@@ -54,9 +55,11 @@ struct RepositoryListView: View {
                 .listStyle(PlainListStyle())
             }
         }
-        .navigationBarHidden(true)
+        .navigationTitle("リポジトリ検索")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
+
 
 struct SearchBarView: View {
     @Binding var text: String
@@ -104,11 +107,6 @@ struct SearchBarView: View {
         .padding(.horizontal)
         .padding(.vertical, 8)
         .background(Color(.systemBackground))
-        .onAppear {
-            if text.isEmpty {
-                text = "GitHubのリポジトリを検索できるよー"
-            }
-        }
     }
 }
 

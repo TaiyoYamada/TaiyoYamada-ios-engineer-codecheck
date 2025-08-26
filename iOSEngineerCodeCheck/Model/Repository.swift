@@ -9,12 +9,6 @@
 
 import Foundation
 
-// MARK: - Data Models
-
-struct GitHubSearchResponse: Codable {
-    let items: [Repository]
-}
-
 struct Repository: Codable {
     let fullName: String
     let language: String?
@@ -32,13 +26,5 @@ struct Repository: Codable {
         case forksCount = "forks_count"
         case openIssuesCount = "open_issues_count"
         case owner
-    }
-}
-
-struct Owner: Codable {
-    let avatarURL: String
-    
-    enum CodingKeys: String, CodingKey {
-        case avatarURL = "avatar_url"
     }
 }

@@ -6,6 +6,7 @@
 //  Copyright © 2025 YUMEMI Inc. All rights reserved.
 //
 
+
 import SwiftUI
 
 struct RepositoryListView: View {
@@ -54,9 +55,11 @@ struct RepositoryListView: View {
                 .listStyle(PlainListStyle())
             }
         }
-        .navigationBarHidden(true)
+        .navigationTitle("リポジトリ検索")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
+
 
 struct SearchBarView: View {
     @Binding var text: String
@@ -104,19 +107,37 @@ struct SearchBarView: View {
         .padding(.horizontal)
         .padding(.vertical, 8)
         .background(Color(.systemBackground))
-        .onAppear {
-            if text.isEmpty {
-                text = "GitHubのリポジトリを検索できるよー"
-            }
-        }
     }
 }
 
 struct RepositoryRowView: View {
     let repository: Repository
+    @State private var avatarImage: UIImage?
+    @State private var isLoadingImage = true
+    private let imageLoader = ImageLoader()
     
     var body: some View {
         HStack {
+            
+            if isLoadingImage {
+                ProgressView()
+                    .frame(width: 40, height: 40)
+            } else if let avatarImage {
+                Image(uiImage: avatarImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 40, height: 40)
+                    .clipShape(Circle())
+            } else {
+                Image(systemName: "person.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 40, height: 40)
+                    .clipShape(Circle())
+                    .foregroundColor(.gray.opacity(0.6))
+            }
+            
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(repository.fullName)
                     .font(.body)
@@ -130,6 +151,14 @@ struct RepositoryRowView: View {
             Spacer()
         }
         .padding(.vertical, 4)
+        .onAppear {
+            imageLoader.loadImage(from: repository.owner.avatarURL) { image in
+                DispatchQueue.main.async {
+                    self.avatarImage = image
+                    self.isLoadingImage = false
+                }
+            }
+        }
     }
 }
 

@@ -9,8 +9,6 @@
 
 import UIKit
 
-// MARK: - Image Loading Service
-
 protocol ImageLoaderProtocol {
     func loadImage(from urlString: String, completion: @escaping (UIImage?) -> Void)
     func cancelCurrentLoad()

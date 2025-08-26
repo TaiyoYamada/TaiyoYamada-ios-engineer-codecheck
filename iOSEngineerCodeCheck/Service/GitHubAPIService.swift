@@ -9,8 +9,6 @@
 
 import Foundation
 
-// MARK: - Network Service
-
 protocol GitHubAPIServiceProtocol {
     func searchRepositories(query: String, completion: @escaping (Result<[Repository], Error>) -> Void)
     func cancelCurrentSearch()
@@ -60,7 +58,7 @@ class GitHubAPIService: GitHubAPIServiceProtocol {
     }
 }
 
-// MARK: - Custom Errors
+// MARK: - Errors
 
 enum GitHubAPIError: LocalizedError {
     case invalidURL

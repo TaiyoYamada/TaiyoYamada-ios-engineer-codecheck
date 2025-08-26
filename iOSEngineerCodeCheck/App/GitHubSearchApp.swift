@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  GitHubSearchApp.swift
 //  iOSEngineerCodeCheck
 //
 //  Created by 山田大陽 on 2025/08/26.
@@ -9,14 +9,11 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        NavigationView {
-            RepositoryListView()
+@main
+struct GitHubSearchApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

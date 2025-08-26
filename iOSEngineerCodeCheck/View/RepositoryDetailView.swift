@@ -6,6 +6,7 @@
 //  Copyright © 2025 YUMEMI Inc. All rights reserved.
 //
 
+
 import SwiftUI
 
 struct RepositoryDetailView: View {
@@ -19,24 +20,35 @@ struct RepositoryDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Avatar Image - 上部中央、元のサイズに近づける
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                Text(viewModel.titleText)
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .lineLimit(1)
+                    .padding(20)
+            }
+            .frame(width: 300)
+            
             VStack {
                 if viewModel.isLoadingImage {
                     ProgressView()
-                        .frame(width: 100, height: 100)
+                        .frame(width: 200, height: 200)
                 } else {
                     if let avatar = viewModel.avatarImage {
                         Image(uiImage: avatar)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
+                            .frame(width: 250, height: 250)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .shadow(radius: 12)
                     } else {
                         Image(systemName: "person.circle")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
+                            .frame(width: 250, height: 250)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .shadow(radius: 12)
                     }
                 }
             }
@@ -44,59 +56,58 @@ struct RepositoryDetailView: View {
             .padding(.top, 30)
             .padding(.bottom, 30)
             
-            // Repository Details - 元のUIKitの単純なレイアウトを再現
-            VStack(alignment: .leading, spacing: 20) {
-                // Title Label
-                Text(viewModel.titleText)
-                    .font(.title3)
-                    .fontWeight(.medium)
-                    .frame(alignment: .leading)
-                
-                // Language Label
-                Text(viewModel.languageText)
-                    .font(.body)
-                    .frame(alignment: .leading)
-                
-                // Stars Label
-                Text(viewModel.starsText)
-                    .font(.body)
-                    .frame(alignment: .leading)
-                
-                // Watchers Label
-                Text(viewModel.watchersText)
-                    .font(.body)
-                    .frame(alignment: .leading)
-                
-                // Forks Label
-                Text(viewModel.forksText)
-                    .font(.body)
-                    .frame(alignment: .leading)
-                
-                // Issues Label
-                Text(viewModel.issuesText)
-                    .font(.body)
-                    .frame(alignment: .leading)
+            Spacer()
+            
+            VStack(alignment: .leading, spacing: 15) {
+                HStack {
+                    Label("言語", systemImage: "chevron.left.slash.chevron.right")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(viewModel.languageText)
+                }
+                HStack {
+                    Label("Stars", systemImage: "star.fill")
+                        .foregroundColor(.yellow)
+                    Spacer()
+                    Text(viewModel.starsText)
+                }
+                HStack {
+                    Label("Watchers", systemImage: "eye.fill")
+                        .foregroundColor(.blue)
+                    Spacer()
+                    Text(viewModel.watchersText)
+                }
+                HStack {
+                    Label("Forks", systemImage: "tuningfork")
+                        .foregroundColor(.green)
+                    Spacer()
+                    Text(viewModel.forksText)
+                }
+                HStack {
+                    Label("Issues", systemImage: "exclamationmark.circle")
+                        .foregroundColor(.red)
+                    Spacer()
+                    Text(viewModel.issuesText)
+                }
             }
-            .padding(.horizontal, 20)
+            .frame(width: 300)
             
             Spacer()
+            
         }
+        .navigationTitle("リポジトリ詳細")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarRole(.editor)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    if let url = URL(string: "https://github.com/\(repository.fullName)") {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
+                    Image(systemName: "safari")
+                }
+            }
+        }
     }
 }
-//
-//#Preview {
-//    NavigationView {
-//        RepositoryDetailView(
-//            repository: Repository(
-//                fullName: "apple/swift",
-//                language: "Swift",
-//                stargazersCount: 65000,
-//                watchersCount: 2500,
-//                forksCount: 10500,
-//                openIssuesCount: 150,
-//                owner: Owner(avatarURL: "https://avatars.githubusercontent.com/u/10639145?v=4")
-//            )
-//        )
-//    }
-//}

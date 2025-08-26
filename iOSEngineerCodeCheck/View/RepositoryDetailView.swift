@@ -40,14 +40,14 @@ struct RepositoryDetailView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 250, height: 250)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                             .shadow(radius: 12)
                     } else {
                         Image(systemName: "person.circle")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 250, height: 250)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                             .shadow(radius: 12)
                     }
                 }
@@ -58,7 +58,7 @@ struct RepositoryDetailView: View {
             
             Spacer()
             
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 15) {
                 HStack {
                     Label("言語", systemImage: "chevron.left.slash.chevron.right")
                         .foregroundColor(.secondary)
@@ -95,6 +95,19 @@ struct RepositoryDetailView: View {
             Spacer()
             
         }
+        .navigationTitle("リポジトリ詳細")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarRole(.editor)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    if let url = URL(string: "https://github.com/\(repository.fullName)") {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
+                    Image(systemName: "safari")
+                }
+            }
+        }
     }
 }

@@ -9,8 +9,6 @@
 
 import Foundation
 
-// MARK: - Network Service
-
 protocol GitHubAPIServiceProtocol {
     func searchRepositories(query: String, completion: @escaping (Result<[Repository], Error>) -> Void)
     func cancelCurrentSearch()
